@@ -343,12 +343,25 @@ updateWinnings(0,0,screen);
 pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,40,20,20));
 pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,440,20,20));
 
+def playFirst():
+	if int(game.whoPlay()) == 1:
+		state=game.computerPlay();
+		if state == -2:
+			showWinner(game.getWinner(), screen,font);
+		else:
+			updateSeeds(screen,state[0],state[2],moveSelector,1);
+			updateText(state[2],state[0], font, screen);
+			updateWinnings(state[1],state[3],screen);
+			complete=False;
+		pygame.display.flip();
+
+playFirst();
+	
 #Adding an event listener using a while loop
 while not done:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			done = True;
-
 		#Used for checking for right key press
 		if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
 			moveSelector = clearMoveScreen(moveSelector,event.key);
@@ -394,6 +407,7 @@ while not done:
 			updateText(game.test.getCompState(),game.test.getPlayerState(), font, screen);
 			updateWinnings(game.test.comp.getWinnings(),game.test.human.getWinnings(),screen);
 			clearWinner();
+			playFirst();
 			
 			
 

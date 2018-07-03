@@ -9,7 +9,7 @@ class playerScript(object):
 		position = raw_input('\nWhat play is player making ');
 		result = self.test.playerPlay(position);
 		if result == -1:
-			self.play();
+			return -1;
 
 	def playPos(self,position):
 		# position = raw_input('\nWhat play is player making ');

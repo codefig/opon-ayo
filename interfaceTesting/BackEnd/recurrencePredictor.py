@@ -15,11 +15,11 @@ class compHandler(object):
 			# print ' possible recurence'
 			# print '^^^^^^^^^^^^^^^^^^^^^';
 			originalBoard.test.gameOverRecurse();
-			self.best_score= max((originalBoard.test.comp.getWinnings()-originalBoard.test.human.getWinnings()),self.best_score);
+			self.best_score= min((originalBoard.test.comp.getWinnings()-originalBoard.test.human.getWinnings()),self.best_score);
 			return
 			
 
-		elif (originalBoard.test.isgameOver() == 'true') | (depth==13):
+		elif (originalBoard.test.isgameOver() == 'true') | (depth==5):
 			# if (depth==20):
 			# 	print '***************************************************************';
 			# 	print 'DEPTH IS ',depth, 'ALREADY, THERE EXIST A RECURRENCE LIKELYHOOD';
