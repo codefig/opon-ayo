@@ -34,8 +34,24 @@ def make_font(fonts, size):
 def redraw(moveSelector):
 
 	x=0;
+	
+	
+
+	#Draw the circle for keeping the scores player
+	pygame.draw.circle(screen, (113,80,1),(240,200),80);
+
+	#Draw the circle for keeping the scores computer
+	pygame.draw.circle(screen, (113,80,1),(760,200),80);
+
 	#Draw a rectangle
 	pygame.draw.rect(screen, (113,80,1),pygame.Rect(200,100,600,200));
+
+	#Draw a line between collector hole and normal hole Standard game look
+	pygame.draw.rect(screen, (0,0,0), pygame.Rect(200,100,2,200));
+
+	#Draw a line between collector hole and normal hole Standard game look
+	pygame.draw.rect(screen, (0,0,0), pygame.Rect(798,100,2,200));
+
 
 	####################################################################
 	#Fancy addition
@@ -90,6 +106,16 @@ def redraw(moveSelector):
 	text = font.render('Winnings:',True, (0,0,0));
 	screen.blit(text, (800,40));
 	screen.blit(text, (800,440));
+
+	text = font.render('Computer',True, (0,0,0));
+
+	#Signify the computer position
+	screen.blit(text,(200,30));
+
+	text = font.render('Player',True, (0,0,0));
+
+	#signify the player
+	screen.blit(text,(200,400));
 	updateWinnings(0,0,screen);
 
 def clearMoveScreen(moveSelector,event):
@@ -221,9 +247,21 @@ def updateWinnings(computer, player,screen):
 	#For the computer winnings
 	text = font.render(str(computer),True, (0,0,0));
 	screen.blit(text, (900,40));
+	
+	for i in range(player):
+		distx =  random.randrange(162,185,4);
+		disty = random.randrange(130,220,4)
+		screen.blit(get_image("seeds/1i.png"),(distx, disty));
 	#For the player winnings
 	text = font.render(str(player),True, (0,0,0));
 	screen.blit(text, (900,440))
+	for i in range(computer):
+		distx =  random.randrange(790,815,4);
+		disty = random.randrange(130,220,4)
+		screen.blit(get_image("seeds/1i.png"),(distx, disty));
+	# for i in range(player)
+	# 	dist =  random.randint(250,200,2);
+	# 	screen.blit(get_image("seeds/1.png"),(posx+dist, posy+dist));
 
 
 ####################################################################
