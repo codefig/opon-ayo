@@ -62,13 +62,13 @@ class compHandler(object):
 					# print 'the play recorded is ',nextPlay;
 				originalBoard=copy.deepcopy(previousBoard);
 				# print 'the board at depth 1 is ', originalBoard.test.printGameState();
-				self.best_score=max(originalBoard.test.getAlpha(),self.best_score);
+				self.best_score=min(originalBoard.test.getAlpha(),self.best_score);
 				originalBoard.test.setAlpha(self.best_score);
 				# print 'the score after min is ', self.best_score;
 				depth=copy.deepcopy(previousdepth);
 				# print ' ',originalBoard.test.getAlpha(),'',alpha_beta_board[len(alpha_beta_board)-2].test.getBeta();
 				if len(alpha_beta_board)>1:
-					if(originalBoard.test.getAlpha() >= alpha_beta_board[len(alpha_beta_board)-2].test.getBeta()):
+					if(originalBoard.test.getAlpha() <= alpha_beta_board[len(alpha_beta_board)-2].test.getBeta()):
 						# print 'alpha score of ',originalBoard.test.getAlpha(), ' is large than beta score of ',(alpha_beta_board[len(alpha_beta_board)-1]).test.getBeta(), 'therefore returning';
 						return;
 				
@@ -89,7 +89,7 @@ class compHandler(object):
 				self.getPossibleMovesAI(originalBoard,player,depth,boards,alpha_beta_board,nextPlay,scores);
 				originalBoard=copy.deepcopy(previousBoard);
 
-				self.best_score=min(originalBoard.test.getBeta(),self.best_score);
+				self.best_score=max(originalBoard.test.getBeta(),self.best_score);
 				originalBoard.test.setBeta(self.best_score);
 				# print 'the board at depth 1 is ', originalBoard.test.printGameState();
 				# print 'the score after max is ', self.best_score;
@@ -97,7 +97,7 @@ class compHandler(object):
 				# print 'boards at minimizing player is', boards;
 				# print ' ',originalBoard.test.getBeta(),'',alpha_beta_board[len(alpha_beta_board)-2].test.getAlpha();
 				if len(alpha_beta_board) > 1:
-					if(originalBoard.test.getBeta() <= (alpha_beta_board[len(alpha_beta_board)-2]).test.getAlpha()):
+					if(originalBoard.test.getBeta() >= (alpha_beta_board[len(alpha_beta_board)-2]).test.getAlpha()):
 						# print 'beta score of ',originalBoard.test.getBeta(), ' is less than alpha score of ',(alpha_beta_board[len(alpha_beta_board)-1]).test.getAlpha(), 'therefore returning';
 						return;
 
