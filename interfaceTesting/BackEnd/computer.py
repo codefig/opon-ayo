@@ -62,7 +62,7 @@ class computer:
 		#check from the current ending hole to last hole for player 1
 		for i in range(hole,len(self.state)):
 			# print 'checking player wins'
-			if (self.state[i] <= 4) & (self.state[i] >= 2):
+			if (self.state[i] < 4) & (self.state[i] >= 2):
 				# print 'player won seed';
 				#update the player winings by one as long as the value of hole is less than 4
 				self.playerWinnings=self.playerWinnings+self.state[i];

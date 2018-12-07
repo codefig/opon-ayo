@@ -68,11 +68,11 @@ class player:
 		#check from the current ending hole to last hole for player 1
 		while(hole>=0):
 			#check to see if end isn't past full
-			if self.state[hole] > 4:
+			if self.state[hole] > 3:
 				break;
 			# print 'collating winnings';
 			# print 'checking computer wins';
-			if (self.state[hole] <= 4) & (self.state[hole] >= 2):
+			if (self.state[hole] < 4) & (self.state[hole] >= 2):
 				# print 'computer won seed';
 				#update the player winings by one as long as the value of hole is less than 4
 				self.playerWinnings=self.playerWinnings+self.state[hole];

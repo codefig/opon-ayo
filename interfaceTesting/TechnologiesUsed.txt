@@ -1,0 +1,15 @@
+PYCHARM
+
+Pycharm is used to make 2D games in python. It is simply a collection of libraries that allow for drawing over an area of the screen(yes all I did was to draw over the screen). Pycharm in ti self is pretty boring, and unpowerfull but allows for fast drawing. The bulk of pycharm usage is in the file "simpleinterface.py" which is the file for running the the game. The main things pycharm were used for include:
+
+1)Drawing of shapes like rectangle for the game board and so on.
+
+2)Quickly overlaying drawings on each other. A big feature of pycharm is that something can be drawn over something else allowing me to change anything. In fact the amount of overdrawing done is ridiculous. 
+
+3)Importing images and changing them. Pycharm allows for using various file format of pictures and this allows to use pictures of seeds already gotten to give more realism to the interface.
+
+4)Font and other drawings: test can also be written on the screen which is another feature that is superb so a combination of pictures shapes and test can be used to form something that looks and feels alive and responsive.
+
+
+Python:
+Python is used for handling all responses made by pycharm. Infact python is used to also submit all request. Like for example on clicking the lot or right mouse button, a python function sends a request to change the location of the selection pointer. The reasoning alogorithm (minimax)used in the game was also written in pure python.

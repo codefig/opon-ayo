@@ -1,0 +1,35 @@
+The game tree describes an ongoing game of which the current board is given in board.png. An ongoing game with almost empty board was used because of the time it would take to recurse for a full board. The game starts with the player playing hole 1 leaving the board as figure computerboard.png(see the attached figure). Since the procedure is recursive, I would only explain the first part to the procedure(I.e the game tree from the root back to the root). The game tree given above uses minimax algorithm and alpha-beta pruning thus reference to some components like alpha and beta are made. Please check the note on alpha beta first to make sure the procedure is well understood before carrying on.
+
+Description to organisation:
+
+1)The first line is the current board
+
+2)The second line is the winnings for the current player either computer or human note that the value is calculate as (computer winnings - player winnings) so if on a round, the player won some seeds, the return value would be -2 since the computer would loose -2.This is because the algorithm is used to know how well the computer would perform on a round and using that heuristic function, the computer would not only know when it won't win any seeds but also when it would loose a lot more.
+
+3)The third line shows the value for alpha and beta that would be passed down to the next node in the tree. The alpha beta value as you would assume is gotten by taking the minimum between the current level and the number of seeds captured at the leave of tree.
+
+4)The 4th line shows the hole the current player plays.
+
+To the game tree. From the current board, the computer starts with its train of thought by evaluating the outcome of playing the first hole as seen from the document. Next is shown the. New game board after the play. Following is shown the winnings(number of seeds) that the computer won. After then the alpha and beta values are updated. Note that the value for the winning for a round of play is kept in memory and updated i.e if the computer wins 2 seeds after playing, then plays again when its its round and wins another 2 seeds, the winnings becomes 4 not 2.
+
+The alpha beta value are only updated at the leave of a tree(i.e when playing is done). As seen from the document this happens where there is a returning phrase in the document. At this point, the computer has reached its maximum game depth and as such returns back to the previous board before that play. For example in the document, the last play was made by the computer when it played hole 4 and won 0 seeds. That play made the game tree become depth of 3 and as such the computer returns back to the previous board returning the value of the number of seeds it would capture for this particular gameplay which in this case is 0. Now on getting to the previous node, the computer being in this case the maximising player, would compare the value returned from the play(i.e the number of seeds it would win) with the value of alpha that is already have which is -200. Since the returned value 0 is greater, it would update it alpha value with this new value. If after going to other nodes, the value 3 was returned for that play, the computer would compare the value returned in this case 3 to its current alpha which is 0 and of course select 3 which means the best play he could have is a 3 along that game tree. The alpha is implemented as follows from the code:
+
+				self.best_score=max(originalBoard.test.getAlpha(),self.best_score);
+				originalBoard.test.setAlpha(self.best_score);
+NB:check line 98 of the code
+
+After the computer finishes up and moves up the tree, it would now encounter a node which is the  player or the minimising player and this node would of course only select the smallest value of alpha and save it in it beta since it is assumed that the player would play to minimise how many seed the computer would play. That whole system gets repeated until getting to the root node which would then using the values returned from all the subtrees select the best play based on the maximum value of alpha there is .  
+
+
+					Alpha Beta Prunning
+
+The juice of the algorithm comes with the prunning which slows for going to deeper depth without considerable time delays. The pruning algorithm is implemented from line 105 to 114 as follows:
+
+if len(alpha_beta_board)>1:
+	holldd='Comparing Alpha value to Beta value ';
+	self.file.write(holldd+'\n');
+	if(originalBoard.test.getAlpha() >=alpha_beta_board[len(alpha_beta_board)-1].test.getBeta()):
+		return;
+
+The line above isn't complete because the line left out aren't as important. Alpha beta prunning works since the maximising player selects only the highest and the minimising player would select only the smallest value then it becomes unnecessary to check some tree if the value would or could be higher than or less than the beta or alpha value respectively.Please check the documentation on alphabet pruning for a more comprehensive note on it. 
+					

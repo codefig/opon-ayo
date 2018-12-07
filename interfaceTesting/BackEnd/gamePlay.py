@@ -7,7 +7,7 @@ import copy
 class gamePlay(object):
 	"""docstring for gamePlay"""
 	def __init__(self):
-		self.first=raw_input('\n computer is player 1 or 2:   ');
+		self.first=0;
 		self.test = Main(self.first,int (4), (2-int (self.first)+1));
 		self.human = playerScript(self.test);	
 		self.computer = computerScript(self.test);
@@ -17,6 +17,8 @@ class gamePlay(object):
 	def isgameOver(self):
 	
 		return self.test.isgameOver();
+	def setWho(self,a):
+		self.first = a;
 
 	def whoPlay(self):
 		return self.first;
@@ -58,6 +60,8 @@ class gamePlay(object):
 			return [self.test.getCompState(),self.test.comp.getWinnings(),self.test.getPlayerState(),self.test.human.getWinnings()];
 		else:
 			return -2;
+			testClone=copy.deepcopy(test);
+		
 
 	def getWinner(self):
 		if(self.test.human.getWinnings() > self.test.comp.getWinnings()):

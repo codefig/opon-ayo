@@ -5,7 +5,21 @@ import BackEnd
 import os
 from BackEnd import gamePlay
 
+negoBox=pygame.Rect(770,370,200,40);
+negoBox1 = pygame.Rect(770,20,200,40);
 _image_library = {};
+clock = pygame.time.Clock();
+input_box = pygame.Rect(350, 100, 140, 32);
+color_inactive = pygame.Color('lightskyblue3');
+color_active = pygame.Color('red');
+color = color_inactive;
+active = False;
+text = '';
+done = False;
+negoButton = pygame.Rect(800,440,150,50);
+state=None;
+status = 0;
+
 def get_image(path):
 	global _image_library;
 	image = _image_library.get(path);
@@ -34,8 +48,6 @@ def make_font(fonts, size):
 def redraw(moveSelector):
 
 	x=0;
-	
-	
 
 	#Draw the circle for keeping the scores player
 	pygame.draw.circle(screen, (113,80,1),(240,200),80);
@@ -103,9 +115,9 @@ def redraw(moveSelector):
 	rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225+moveSelector,305,50,4));
 
 	#Put the winnings to inform of current winner
-	text = font.render('Winnings:',True, (0,0,0));
-	screen.blit(text, (800,40));
-	screen.blit(text, (800,440));
+	# text = font.render('Winnings:',True, (0,0,0));
+	# screen.blit(text, (800,40));
+	# screen.blit(text, (800,440));
 
 	text = font.render('Computer',True, (0,0,0));
 
@@ -116,7 +128,22 @@ def redraw(moveSelector):
 
 	#signify the player
 	screen.blit(text,(200,400));
-	updateWinnings(0,0,screen);
+	# updateWinnings(0,0,screen);
+	##################Negotiation Button############################
+	font1=make_font('Helvetica',20);
+	#Draw the negotiation button
+	pygame.draw.rect(screen, (0,140,0),negoButton);
+	#Text to put there
+	text1 = font1.render('Negotiate',True,(255,255,255));
+	screen.blit(text1,(840,455));
+
+	#The text box for negotiating
+	pygame.draw.rect(screen, (0,0,0), negoBox, 2);
+
+	#The text box for negotiating for computer
+	pygame.draw.rect(screen,pygame.Color('grey'),negoBox1,2)
+
+	####################End of Negotiatoin Button####################
 
 def clearMoveScreen(moveSelector,event):
 	"""For clearing the move selector"""
@@ -167,34 +194,24 @@ def updateSeeds(screen,seeds1,seeds2,moveSelector,check):
 		screen.blit(get_image(strr),(countx+dist, county));
 		dist+=100;
 
+	##################Negotiation Button############################
+	font1=make_font('Helvetica',20);
+	#Draw the negotiation button
+	pygame.draw.rect(screen, (0,140,0),negoButton);
+	#Text to put there
+	text1 = font1.render('Negotiate',True,(255,255,255));
+	screen.blit(text1,(840,455));
+	#The text box for negotiating
+	pygame.draw.rect(screen, (0,0,0), negoBox, 2);
+	#The text box for negotiating for computer
+	pygame.draw.rect(screen,pygame.Color('grey'),negoBox1,2)
 
-#Update the text revealing seed number
-def updateText(seedNum1, seedNum2, font, screen):
-
-	#Clear out the text under holes
-	pygame.draw.rect(screen, (255,255,255),pygame.Rect(200,70,600,20));
-	pygame.draw.rect(screen, (255,255,255),pygame.Rect(200,320,600,20));
-
-	count = 0;
-	#update the seed number from the game board returned second row
-	for i in seedNum1:
-		text = font.render(str(i),True, (0,0,0));
-		#put the seed number under hole
-		screen.blit(text, (250+count,320));
-		count+=100;
-
-	count=0;
-	#update the seed number from the game board returned first row
-	for i in seedNum2:
-		text = font.render(str(i),True, (0,0,0));
-		#put the seed number under hole
-		screen.blit(text, (250+count,70));
-		count+=100;
+	####################End of Negotiatoin Button####################
 
 #To show who wins
 def showWinner(who,screen,font):
 	updateSeeds(screen,[0,0,0,0,0,0],[0,0,0,0,0,0],moveSelector,0);
-	updateText([0,0,0,0,0,0],[0,0,0,0,0,0], font, screen);
+	# updateText([0,0,0,0,0,0],[0,0,0,0,0,0], font, screen);
 	#Font for displaying text
 	font = make_font('Helvetica',40);
 	if (who=='Draw'):
@@ -220,48 +237,18 @@ def clearWinner():
 
 #update the winnings
 def updateWinnings(computer, player,screen):
-	#Clear out the text under holes
-	pygame.draw.rect(screen, (255,255,255),pygame.Rect(900,40,25,20));
-	pygame.draw.rect(screen, (255,255,255),pygame.Rect(900,440,25,20));
-
-	color=(169,42,0);
-	computerColor=(0,140,0)
-	playerColor=(0,140,0);
-	if computer > player:
-		# computerColor=(0,140,0);
-		# playerColor=color;
-		#Put a small rectangle in front of players to indicate current leader
-		pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,40,20,20),);
-		pygame.draw.rect(screen, (169,42,0),pygame.Rect(925,440,20,20));
-
-	elif player > computer:
-		# playerColor=(0,140,0);
-		# computerColor=color;
-		pygame.draw.rect(screen, (169,42,0),pygame.Rect(925,40,20,20));
-		pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,440,20,20));
-
-	else:
-		pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,40,20,20));
-		pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,440,20,20));
-
-	#For the computer winnings
-	text = font.render(str(computer),True, (0,0,0));
-	screen.blit(text, (900,40));
 	
 	for i in range(player):
-		distx =  random.randrange(162,185,4);
-		disty = random.randrange(130,220,4)
-		screen.blit(get_image("seeds/1i.png"),(distx, disty));
-	#For the player winnings
-	text = font.render(str(player),True, (0,0,0));
-	screen.blit(text, (900,440))
-	for i in range(computer):
 		distx =  random.randrange(790,815,4);
 		disty = random.randrange(130,220,4)
 		screen.blit(get_image("seeds/1i.png"),(distx, disty));
-	# for i in range(player)
-	# 	dist =  random.randint(250,200,2);
-	# 	screen.blit(get_image("seeds/1.png"),(posx+dist, posy+dist));
+
+	for i in range(computer):
+		
+		distx =  random.randrange(162,185,4);
+		disty = random.randrange(130,220,4)
+		screen.blit(get_image("seeds/1i.png"),(distx, disty));
+
 
 
 ####################################################################
@@ -275,6 +262,118 @@ screen = pygame.display.set_mode((1000,500),0);
 done=False;
 moveSelector=0;
 
+#Set screen title
+pygame.display.set_caption('Opon Ayo');
+
+#call the backend awake
+game=gamePlay();
+
+
+#The screen for collecting player input as player1 or 2
+def playerScreen():
+	clock = pygame.time.Clock();
+	input_box = pygame.Rect(350, 100, 140, 32);
+	color_inactive = pygame.Color('lightskyblue3');
+	color_active = pygame.Color('dodgerblue2');
+	color = color_inactive;
+	active = False;
+	text = '';
+	done = False;
+	while not done:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				done = True;
+			if event.type == pygame.MOUSEBUTTONDOWN:
+                # If the user clicked on the input_box rect.
+				if input_box.collidepoint(event.pos):
+                    # Toggle the active variable.
+					active = not active;
+				else:
+					active = False;
+                # Change the current color of the input box.
+					color = color_active if active else color_inactive;
+			if event.type == pygame.KEYDOWN:
+				if active:
+					if event.key == pygame.K_RETURN:
+						game.setWho(int(text));
+						# print(text);
+						return None;
+					elif event.key == pygame.K_BACKSPACE:
+						text = text[:-1];
+					else:
+						text += event.unicode;
+
+		text4 = font.render('What player is computer:',True,(255,255,255));
+
+		screen.fill((30, 30, 30));
+
+        # Render the current text.
+		txt_surface = font.render(text, True, color);
+
+		#Render the text
+		screen.blit(text4,(350,40));
+
+        # Resize the box if the text is too long.
+		width = max(200, txt_surface.get_width()+10);
+		input_box.w = width;
+
+        # Blit the text.
+		screen.blit(txt_surface, (input_box.x+5, input_box.y+5));
+
+        # Blit the input_box rect.
+		pygame.draw.rect(screen, color, input_box, 2);
+
+		pygame.display.flip();
+		clock.tick(30);
+
+#Font for displaying text
+font = make_font('Helvetica',30);
+
+def game_intro():
+
+    #Create the buttons
+    startButton = pygame.Rect(350,200,100,50);
+    quitButton = pygame.Rect(550,200,100,50);
+
+    while True:
+        for event in pygame.event.get():
+            # print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit();
+                quit();
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos;  # gets mouse position
+                # checks if mouse position is over the button
+                if startButton.collidepoint(mouse_pos):
+                    # prints current location of mouse
+                    playerScreen();
+                    return None;
+                elif quitButton.collidepoint(mouse_pos):
+                	pygame.quit();
+                	quit();
+
+
+        screen.fill((255,255,255));
+        font1=make_font('Helvetica',20);
+        text = font.render('Welcome To Opon-Ayo Game',True,(0,0,0));
+        text1 = font1.render('Start Game',True,(255,255,255));
+        text2 = font1.render('Quit Game',True,(255,255,255));
+        screen.blit(text,(350,40));
+        
+        pygame.draw.rect(screen, (0,140,0),startButton);
+        pygame.draw.rect(screen, (140,0,0),quitButton);
+
+        screen.blit(text1,(360,215));
+        screen.blit(text2,(560,215));
+
+
+        pygame.display.update();
+
+        # clock.tick(15)
+game_intro();
+
+
+
 #used for drawing the holes
 x=0;
 
@@ -284,11 +383,6 @@ complete=False;
 #Use white background for the screen
 screen.fill((255,255,255));
 
-#Set screen title
-pygame.display.set_caption('Opon Ayo');
-
-#Font for displaying text
-font = make_font('Helvetica',30);
 
 #Draw a rectangle
 pygame.draw.rect(screen, (113,80,1),pygame.Rect(200,100,600,200));
@@ -338,8 +432,6 @@ for i in range(1,7):
 	pygame.draw.circle(screen, (93,80,38), (250+x,250), 25);
 	x+=100;
 
-#call the backend awake
-game=gamePlay();
 
 #put the seeds into holes
 updateSeeds(screen, game.test.getCompState(),game.test.getPlayerState(),moveSelector,1);
@@ -347,22 +439,8 @@ updateSeeds(screen, game.test.getCompState(),game.test.getPlayerState(),moveSele
 #Clear out x memory
 x=0;
 
-#put the seed numer under the first hole
-for i in [4,4,4,4,4,4]:
-		text = font.render(str(i),True, (0,0,0));
-		#put the seed number under hole
-		screen.blit(text, (250+x,75));
-		x+=100;
-
 #clear out x memory
 x=0;
-
-#put the seed numer under the second hole
-for i in [4,4,4,4,4,4]:
-		text = font.render(str(i),True, (0,0,0));
-		#put the seed number under hole
-		screen.blit(text, (250+x,320));
-		x+=100;
 
 #Draw the rectangle used for selecting the hole to play
 rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225,305,50,4));
@@ -371,15 +449,30 @@ rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225,305,50,4));
 #Draw a line between the 3 holes. Standard game look
 pygame.draw.rect(screen, (0,0,0), pygame.Rect(500,100,2,200));
 
+##################Negotiation Button############################
+font1=make_font('Helvetica',20);
+#Draw the negotiation button
+pygame.draw.rect(screen, (0,140,0),negoButton);
+#Text to put there
+text1 = font1.render('Negotiate',True,(255,255,255));
+screen.blit(text1,(840,455));
+
+#The text box for negotiating for player
+pygame.draw.rect(screen, (0,0,0), negoBox, 2);
+
+#The text box for negotiating for computer
+pygame.draw.rect(screen,pygame.Color('grey'),negoBox1,2)
+
+####################End of Negotiatoin Button####################
 #Put the winnings to inform of current winner
-text = font.render('Winnings:',True, (0,0,0));
-screen.blit(text, (800,40));
-screen.blit(text, (800,440));
-updateWinnings(0,0,screen);
+# text = font.render('Winnings:',True, (0,0,0));
+# screen.blit(text, (800,40));
+# screen.blit(text, (800,440));
+# updateWinnings(0,0,screen);
 
 #Put a small rectangle in front of players to indicate current leader
-pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,40,20,20));
-pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,440,20,20));
+#pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,40,20,20));
+#pygame.draw.rect(screen, (0,140,0),pygame.Rect(925,440,20,20));
 
 def playFirst():
 	if int(game.whoPlay()) == 1:
@@ -388,31 +481,154 @@ def playFirst():
 			showWinner(game.getWinner(), screen,font);
 		else:
 			updateSeeds(screen,state[0],state[2],moveSelector,1);
-			updateText(state[2],state[0], font, screen);
+			# updateText(state[2],state[0], font, screen);
 			updateWinnings(state[1],state[3],screen);
 			complete=False;
 		pygame.display.flip();
 
 playFirst();
+
+#For the negotiation
+#For now the computer reeieves the negotiations from the player and considers if it suits him or not. If the computer sees that its winnigs plus all the
+#remainig seeds is smaller than the players winnings, he accepts and displays winner Else he doesn't. Also, if the computer sees that 
+#its winnings plus the negotiated seeds is greater than the platers winnigs and remaining seed, he accepts the negotiation.
+def toNegotiate(seeds):
+	if (seeds > sum(state[2])):
+		return False;
+	if True:
+		#This is for the computer thinking about the deal
+		if((sum(state[0]) + sum(state[2])) < 4):
+			print ("the sum of the state[2] is ", sum(state[2]) );#tate[0] is the number of seeds the computer has on his board ditto for state[2]
+			print ("The sum of the state[0] is ", sum(state[0]) );
+			print ("The sum of the state[1] is ", (state[1]) );
+			print ("The sum of the state[3] is ", (state[3]) );
+
+			if((state[1]+(sum(state[0]) + sum(state[2]))) <= state[3]):#check for the first condition
+				print ("Computer Accepts Shamefully since it knows it can not win again");
+				return False;
+			elif(state[1]+seeds >= state[3]+(sum(state[0]) + sum(state[2]))):#Check for the second condition
+				print("Computer's winnigs is far greater or at least I dont loose, I take the deal");
+				return False;
+			return False;
+		
+		# else:
+		# 	#The computer proposing a new deal
+		# 	if(state[1]+sum(state[2])+sum(state[0]) < state[3]):
+		# 		print("jj");
+		# 		font1=make_font('Helvetica',20);
+		# 		txt_surface = font1.render(str(state[1]/2), True, (0,0,0));
+
+		# 	    # Resize the box if the text is too long.
+		# 		width = max(200, txt_surface.get_width()+10);
+		# 		negoBox1.w = width;
+
+		# 		        # Blit the text.
+		# 		screen.blit(txt_surface, (negoBox1.x+5, negoBox1.y+5));
+
+		# 		        # Blit the input_box rect.
+		# 		pygame.draw.rect(screen, color, negoBox1, 2);
+		# 		# compNegotiate(0)
+		# 		status = 0;
+		# 		return True;
+
+		# 	elif(state[1]+seeds > state [3]+sum(state[2])-seeds):
+		# 		print("jt");
+
+		# 		font1=make_font('Helvetica',20);
+		# 		txt_surface = font1.render(str(state[1]/2), True, (0,0,0));
+
+		# 	    # Resize the box if the text is too long.
+		# 		width = max(200, txt_surface.get_width()+10);
+		# 		negoBox1.w = width;
+
+		# 		        # Blit the text.
+		# 		screen.blit(txt_surface, (negoBox1.x+5, negoBox1.y+5));
+
+		# 		        # Blit the input_box rect.
+		# 		pygame.draw.rect(screen, color, negoBox1, 2);
+		# 		status = 1;
+		# 		return True;
+
+		# 	elif(state[1]+seeds+sum(state[0])/2 > state[3]+(sum(state[2])-seeds)):
+		# 		print("ss");
+		# 		font1=make_font('Helvetica',20);
+		# 		txt_surface = font1.render(str(state[1]/2), True, (0,0,0));
+
+		# 	    # Resize the box if the text is too long.
+		# 		width = max(200, txt_surface.get_width()+10);
+		# 		negoBox1.w = width;
+
+		# 		        # Blit the text.
+		# 		screen.blit(txt_surface, (negoBox1.x+5, negoBox1.y+5));
+
+		# 		        # Blit the input_box rect.
+		# 		pygame.draw.rect(screen, color, negoBox1, 2);
+		# 		status = 2;
+		# 		return True;
+		# 	else:
+		# 		return False;
 	
+
+def compNegotiate(status):
+	font1=make_font('Helvetica',20);
+	txt_surface = font1.render(str(state[1]/2), True, (0,0,0));
+
+		    # Resize the box if the text is too long.
+	width = max(200, txt_surface.get_width()+10);
+	negoBox1.w = width;
+
+			        # Blit the text.
+	screen.blit(txt_surface, (negoBox1.x+5, negoBox1.y+5));
+
+			        # Blit the input_box rect.
+	pygame.draw.rect(screen, color, negoBox1, 2);
+	# if(status == 0):
+	# 	return True;
+	if status == 0:
+		return 0;
+	elif status == 1:
+		return sum(state[0])/2;
+	else:
+		return sum(state[0])/2;
+
 #Adding an event listener using a while loop
 while not done:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			done = True;
+		if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+			if active:
+				text = ''
+				# pygame.draw.rect(screen,color,negoBox,2);
+				# Render the current text.
+				font1=make_font('Helvetica',20);
+				txt_surface = font1.render(text, True, (0,0,0));
+
+			        # Resize the box if the text is too long.
+				width = max(200, txt_surface.get_width()+10);
+				negoBox.w = width;
+
+			        # Blit the text.
+				screen.blit(txt_surface, (negoBox.x+5, negoBox.y+5));
+				#Cover the whole screen
+				pygame.draw.rect(screen, (255,255,255), negoBox);
+
+			        # Blit the input_box rect.
+				pygame.draw.rect(screen, color, negoBox, 2);
+
 		#Used for checking for right key press
-		if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
 			moveSelector = clearMoveScreen(moveSelector,event.key);
 			moveSelector+=100;
 			rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225+moveSelector,305,50,4));
 
 		#used for checking for left key press
-		if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
 			moveSelector = clearMoveScreen(moveSelector, event.key);
 			moveSelector-=100;
 			rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225+moveSelector,305,50,4));
 
-		if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
 			position=((rect.center[0]-250)/100)+1;
 			state=game.playerPlay(position);
 			if state==-1:	
@@ -424,7 +640,7 @@ while not done:
 
 			else:
 				updateSeeds(screen,state[0],state[2],moveSelector,1);
-				updateText(state[2],state[0], font, screen);
+				# updateText(state[2],state[0], font, screen);
 				updateWinnings(state[1],state[3],screen);
 				complete = True;
 
@@ -435,18 +651,76 @@ while not done:
 					continue;
 				else:
 					updateSeeds(screen,state[0],state[2],moveSelector,1);
-					updateText(state[2],state[0], font, screen);
+					# updateText(state[2],state[0], font, screen);
 					updateWinnings(state[1],state[3],screen);
 					complete=False;
-		if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
 			game = gamePlay();
 			#put the seeds into holes
 			updateSeeds(screen, game.test.getCompState(),game.test.getPlayerState(),moveSelector,1);
-			updateText(game.test.getCompState(),game.test.getPlayerState(), font, screen);
+			# updateText(game.test.getCompState(),game.test.getPlayerState(), font, screen);
 			updateWinnings(game.test.comp.getWinnings(),game.test.human.getWinnings(),screen);
 			clearWinner();
 			playFirst();
-			
+
+		elif event.type == pygame.KEYDOWN:
+			if active:
+				text += event.unicode;
+				# pygame.draw.rect(screen,color,negoBox,2);
+				# Render the current text.
+				font1=make_font('Helvetica',20);
+				txt_surface = font1.render(text, True, (0,0,0));
+
+			        # Resize the box if the text is too long.
+				width = max(200, txt_surface.get_width()+10);
+				negoBox.w = width;
+
+			        # Blit the text.
+				screen.blit(txt_surface, (negoBox.x+5, negoBox.y+5));
+
+			        # Blit the input_box rect.
+				pygame.draw.rect(screen, color, negoBox, 2);
+				
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			mouse_pos = event.pos;  # gets mouse position
+            # If the user clicked on the input_box rect.
+			if negoBox.collidepoint(event.pos):
+                    # Toggle the active variable.
+				active = not active;
+					# toNegotiate(int(text));
+			elif negoButton.collidepoint(mouse_pos):
+                # checks if mouse position is over the button
+				if(not toNegotiate(int(text))):
+					text ='';
+					# pygame.draw.rect(screen,color,negoBox,2);
+				        # Resize the box if the text is too long.
+					width = max(200, txt_surface.get_width()+10);
+					negoBox.w = width;
+					#Cover the whole screen
+					pygame.draw.rect(screen, (255,255,255), negoBox);
+
+				        # Blit the input_box rect.
+					pygame.draw.rect(screen, (255,0,0), negoBox, 2);
+				else:
+					text ='';
+					# pygame.draw.rect(screen,color,negoBox,2);
+				        # Resize the box if the text is too long.
+					width = max(200, txt_surface.get_width()+10);
+					negoBox.w = width;
+					#Cover the whole screen
+					pygame.draw.rect(screen, (255,255,255), negoBox);
+
+				        # Blit the input_box rect.
+					pygame.draw.rect(screen, (0,141,0), negoBox, 2);
+					compNegotiate(status);
+
+			else:
+				active = False;
+                # Change the current color of the input box.
+				color = color_active if active else color_inactive;
+		
+	
+		
 			
 
 	pygame.display.flip();

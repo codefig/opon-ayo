@@ -12,8 +12,8 @@ class Main:
 	
 	def __init__(self,difLevel,compStat,playerStat):
 		self.difLevel=1;
-		self.comp = computer([0,0,1,0,0,1],compStat);
-		self.human = player([0,1,0,0,0,1],playerStat);
+		self.comp = computer([4,4,4,4,4,4],compStat);
+		self.human = player([4,4,4,4,4,4],playerStat);
 		self.alpha=-200;#for maximiser
 		self.beta=200;#for minimizer
 
@@ -93,13 +93,13 @@ class Main:
 	#used to check if player is disadvantaged at the begining of the game
 	def playerStateEmpty(self):
 		# print 'Player state empty';
-		self.human.setWinnings(sum(self.comp.getState()));
+		self.human.setWinnings(200);
 		self.gameOver();
 
 	#used to check if computer is disadvantages at the begining of the game
 	def compStateEmpty(self):
 		# print 'computer state empty';
-		self.comp.setWinnings(sum(self.human.getState()));
+		self.comp.setWinnings(200);
 		self.gameOver();
 
 	#method to end a recursive game 
