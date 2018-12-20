@@ -502,33 +502,38 @@ def toNegotiate(seeds):
 		print('Test 1 :');
 		if((state[1]+(sum(state[0]) + sum(state[2]))) <= state[3]):#check for the first condition
 			print ("Computer Accepts Shamefully since it knows it can not win again");
-			return True;
+			return sum(seeds[0])/2;#Computer gives half its seeds
 		print('Test 2 :');
 		if(state[1]+seeds >= state[3]+(sum(state[0]) + sum(state[2]))):#Check for the second condition
 			print("Computer's winnigs is far greater or at least I dont loose, I take the deal");
-			return True;
+			return sum(state[0]);#Computer reyturns all its seeds
 		print('Test 3 :');
 		if(state[1]+seeds > 24):#Check if the computer already won
 			print('Computer already won');
-			return True;
+			return sum(state[0]);#Computer returns all its seeds
 		print('Test 4 :');
 		if(state[1]+seeds+sum(state[0]) > 24):#check if the computer has enough seeds to win
 			#Implement logice for how much seed to release
-			print('Computer would win by not giving any seed');
+			print('Computer would win by not giving any seed');#but if it can find a balance, return the value to win
+			need = 25-(state[1]+seeds);#Get the seeds needed to win
+			if(sum(state[0])>need):#See if computer has more seeds return the remaining if true
+				return sum(state[0])-need;
+			else:
+				return 0;
 			return True;
 		print('Test 5 :');
 		if(state[3] > 24):#If the player already has more seeds, forget it
 			print('Player already has upper hand');
-			return True;
+			return sum(state[1])/2;
 		print('Test 6 :');
 		if((sum(state[0])+sum(state[2])) % 2 ==0 & state[1]==state[3]):
 			print('There is a possibility of a draw');
-			return False; #There is a draw possibility
-		return False;
+			return -1; #There is a draw possibility
+		return -1;
 
 	except Exception as e:
 		print('Fatal error for release');
-		return False;
+		return -1;
 		
 		# else:
 		# 	#The computer proposing a new deal
@@ -685,6 +690,7 @@ while not done:
 		elif event.type == pygame.KEYDOWN:
 			if active:
 				print('active');
+				text = '';
 				text += event.unicode;
 				# pygame.draw.rect(screen,color,negoBox,2);
 				# Render the current text.
@@ -709,10 +715,12 @@ while not done:
 				active = True;
 					# toNegotiate(int(text));
 			elif negoButton.collidepoint(mouse_pos):
+				result = toNegotiate(int(text));
                 # checks if mouse position is over the button
-				if(not toNegotiate(int(text))):
+				if(result < 0):
 					text ='';
-					print (text);
+					print('Computer would release: ');
+					print (result);
 					# pygame.draw.rect(screen,color,negoBox,2);
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
@@ -725,7 +733,8 @@ while not done:
 					
 				else:
 					text ='';
-					print(text);
+					print('Computer would release: ');
+					print(result);
 					# pygame.draw.rect(screen,color,negoBox,2);
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
