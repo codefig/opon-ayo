@@ -495,21 +495,40 @@ playFirst();
 def toNegotiate(seeds):
 	if (seeds > sum(state[2])):
 		return False;
-	if True:
-		#This is for the computer thinking about the deal
-		if((sum(state[0]) + sum(state[2])) < 4):
-			print ("the sum of the state[2] is ", sum(state[2]) );#tate[0] is the number of seeds the computer has on his board ditto for state[2]
-			print ("The sum of the state[0] is ", sum(state[0]) );
-			print ("The sum of the state[1] is ", (state[1]) );
-			print ("The sum of the state[3] is ", (state[3]) );
 
-			if((state[1]+(sum(state[0]) + sum(state[2]))) <= state[3]):#check for the first condition
-				print ("Computer Accepts Shamefully since it knows it can not win again");
-				return False;
-			elif(state[1]+seeds >= state[3]+(sum(state[0]) + sum(state[2]))):#Check for the second condition
-				print("Computer's winnigs is far greater or at least I dont loose, I take the deal");
-				return False;
-			return False;
+	#Realised an error was thrown when the state is empty
+	try:
+		# This is for the computer thinking about the deal
+		print('Test 1 :');
+		if((state[1]+(sum(state[0]) + sum(state[2]))) <= state[3]):#check for the first condition
+			print ("Computer Accepts Shamefully since it knows it can not win again");
+			return True;
+		print('Test 2 :');
+		if(state[1]+seeds >= state[3]+(sum(state[0]) + sum(state[2]))):#Check for the second condition
+			print("Computer's winnigs is far greater or at least I dont loose, I take the deal");
+			return True;
+		print('Test 3 :');
+		if(state[1]+seeds > 24):#Check if the computer already won
+			print('Computer already won');
+			return True;
+		print('Test 4 :');
+		if(state[1]+seeds+sum(state[0]) > 24):#check if the computer has enough seeds to win
+			#Implement logice for how much seed to release
+			print('Computer would win by not giving any seed');
+			return True;
+		print('Test 5 :');
+		if(state[3] > 24):#If the player already has more seeds, forget it
+			print('Player already has upper hand');
+			return True;
+		print('Test 6 :');
+		if((sum(state[0])+sum(state[2])) % 2 ==0 & state[1]==state[3]):
+			print('There is a possibility of a draw');
+			return False; #There is a draw possibility
+		return False;
+
+	except Exception as e:
+		print('Fatal error for release');
+		return False;
 		
 		# else:
 		# 	#The computer proposing a new deal
@@ -665,6 +684,7 @@ while not done:
 
 		elif event.type == pygame.KEYDOWN:
 			if active:
+				print('active');
 				text += event.unicode;
 				# pygame.draw.rect(screen,color,negoBox,2);
 				# Render the current text.
@@ -686,12 +706,13 @@ while not done:
             # If the user clicked on the input_box rect.
 			if negoBox.collidepoint(event.pos):
                     # Toggle the active variable.
-				active = not active;
+				active = True;
 					# toNegotiate(int(text));
 			elif negoButton.collidepoint(mouse_pos):
                 # checks if mouse position is over the button
 				if(not toNegotiate(int(text))):
 					text ='';
+					print (text);
 					# pygame.draw.rect(screen,color,negoBox,2);
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
@@ -701,8 +722,10 @@ while not done:
 
 				        # Blit the input_box rect.
 					pygame.draw.rect(screen, (255,0,0), negoBox, 2);
+					
 				else:
 					text ='';
+					print(text);
 					# pygame.draw.rect(screen,color,negoBox,2);
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
@@ -712,7 +735,8 @@ while not done:
 
 				        # Blit the input_box rect.
 					pygame.draw.rect(screen, (0,141,0), negoBox, 2);
-					compNegotiate(status);
+					#compNegotiate(status);
+					
 
 			else:
 				active = False;
