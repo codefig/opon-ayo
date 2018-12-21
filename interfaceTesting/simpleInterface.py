@@ -17,6 +17,8 @@ active = False;
 text = '';
 done = False;
 negoButton = pygame.Rect(800,440,150,50);
+compNegoButton = pygame.Rect(830,65,50,40);
+compNonegoButton = pygame.Rect(910,65,50,40);
 state=None;
 status = 0;
 
@@ -133,9 +135,20 @@ def redraw(moveSelector):
 	font1=make_font('Helvetica',20);
 	#Draw the negotiation button
 	pygame.draw.rect(screen, (0,140,0),negoButton);
+	pygame.draw.rect(screen, (0,140,0),compNegoButton);
+	pygame.draw.rect(screen, (140,0,0),compNonegoButton);
+
 	#Text to put there
 	text1 = font1.render('Negotiate',True,(255,255,255));
-	screen.blit(text1,(840,455));
+	screen.blit(text1,(840,50));
+
+	#Text to put there
+	text2 = font1.render('Y',True,(255,255,255));
+	screen.blit(text2,(850,80));
+
+	#Text to put there
+	text3 = font1.render('N',True,(255,255,255));
+	screen.blit(text3,(930,80));
 
 	#The text box for negotiating
 	pygame.draw.rect(screen, (0,0,0), negoBox, 2);
@@ -198,9 +211,21 @@ def updateSeeds(screen,seeds1,seeds2,moveSelector,check):
 	font1=make_font('Helvetica',20);
 	#Draw the negotiation button
 	pygame.draw.rect(screen, (0,140,0),negoButton);
+	pygame.draw.rect(screen, (0,140,0),compNegoButton);
+	pygame.draw.rect(screen, (140,0,0),compNonegoButton);
+
 	#Text to put there
 	text1 = font1.render('Negotiate',True,(255,255,255));
 	screen.blit(text1,(840,455));
+
+	#Text to put there
+	text2 = font1.render('Y',True,(255,255,255));
+	screen.blit(text2,(850,80));
+
+	#Text to put there
+	text3 = font1.render('N',True,(255,255,255));
+	screen.blit(text3,(930,80));
+
 	#The text box for negotiating
 	pygame.draw.rect(screen, (0,0,0), negoBox, 2);
 	#The text box for negotiating for computer
@@ -453,9 +478,20 @@ pygame.draw.rect(screen, (0,0,0), pygame.Rect(500,100,2,200));
 font1=make_font('Helvetica',20);
 #Draw the negotiation button
 pygame.draw.rect(screen, (0,140,0),negoButton);
+pygame.draw.rect(screen, (0,140,0),compNegoButton);
+pygame.draw.rect(screen, (140,0,0),compNonegoButton);
+
 #Text to put there
 text1 = font1.render('Negotiate',True,(255,255,255));
 screen.blit(text1,(840,455));
+
+#Text to put there
+text2 = font1.render('Y',True,(255,255,255));
+screen.blit(text2,(850,80));
+
+#Text to put there
+text3 = font1.render('N',True,(255,255,255));
+screen.blit(text3,(930,80));
 
 #The text box for negotiating for player
 pygame.draw.rect(screen, (0,0,0), negoBox, 2);
@@ -493,8 +529,8 @@ playFirst();
 #remainig seeds is smaller than the players winnings, he accepts and displays winner Else he doesn't. Also, if the computer sees that 
 #its winnings plus the negotiated seeds is greater than the platers winnigs and remaining seed, he accepts the negotiation.
 def toNegotiate(seeds):
-	if (seeds > sum(state[2])):
-		return False;
+	# if (seeds > sum(state[2])):
+	# 	return False;
 
 	#Realised an error was thrown when the state is empty
 	try:
@@ -690,7 +726,6 @@ while not done:
 		elif event.type == pygame.KEYDOWN:
 			if active:
 				print('active');
-				text = '';
 				text += event.unicode;
 				# pygame.draw.rect(screen,color,negoBox,2);
 				# Render the current text.
@@ -721,6 +756,13 @@ while not done:
 					text ='';
 					print('Computer would release: ');
 					print (result);
+					# Render the current text.
+					if(result < 0):
+						result = 0;
+					font1=make_font('Helvetica',20);
+					txt_surface1 = font1.render(str(result), True, (0,0,0));
+					# Blit the text.
+					screen.blit(txt_surface1, (negoBox1.x+5, negoBox1.y+5));
 					# pygame.draw.rect(screen,color,negoBox,2);
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
@@ -735,6 +777,13 @@ while not done:
 					text ='';
 					print('Computer would release: ');
 					print(result);
+					# Render the current text.
+					if(result<0):
+						result = 0;
+					font1=make_font('Helvetica',20);
+					txt_surface1 = font1.render(str(result), True, (0,0,0));
+					# Blit the text.
+					screen.blit(txt_surface1, (negoBox1.x+5, negoBox1.y+5));
 					# pygame.draw.rect(screen,color,negoBox,2);
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
