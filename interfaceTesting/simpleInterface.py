@@ -21,6 +21,7 @@ compNegoButton = pygame.Rect(830,65,50,40);
 compNonegoButton = pygame.Rect(910,65,50,40);
 state=None;
 status = 0;
+currNego = False; #To know if a negotiation is going on
 
 def get_image(path):
 	global _image_library;
@@ -496,6 +497,7 @@ screen.blit(text3,(930,80));
 #The text box for negotiating for player
 pygame.draw.rect(screen, (0,0,0), negoBox, 2);
 
+
 #The text box for negotiating for computer
 pygame.draw.rect(screen,pygame.Color('grey'),negoBox1,2)
 
@@ -529,11 +531,11 @@ playFirst();
 #remainig seeds is smaller than the players winnings, he accepts and displays winner Else he doesn't. Also, if the computer sees that 
 #its winnings plus the negotiated seeds is greater than the platers winnigs and remaining seed, he accepts the negotiation.
 def toNegotiate(seeds):
-	# if (seeds > sum(state[2])):
-	# 	return False;
 
 	#Realised an error was thrown when the state is empty
 	try:
+		if (seeds > sum(state[2])):
+			return -2;
 		# This is for the computer thinking about the deal
 		print('Test 1 :');
 		if((state[1]+(sum(state[0]) + sum(state[2]))) <= state[3]):#check for the first condition
@@ -675,20 +677,25 @@ while not done:
 
 			        # Blit the input_box rect.
 				pygame.draw.rect(screen, color, negoBox, 2);
+				pygame.draw.rect(screen, color, negoBox1, 2);
+
 
 		#Used for checking for right key press
 		elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+			currNego = False;
 			moveSelector = clearMoveScreen(moveSelector,event.key);
 			moveSelector+=100;
 			rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225+moveSelector,305,50,4));
 
 		#used for checking for left key press
 		elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+			currNego = False;
 			moveSelector = clearMoveScreen(moveSelector, event.key);
 			moveSelector-=100;
 			rect=pygame.draw.rect(screen,(0,0,0), pygame.Rect(225+moveSelector,305,50,4));
 
 		elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+			currNego = False;
 			position=((rect.center[0]-250)/100)+1;
 			state=game.playerPlay(position);
 			if state==-1:	
@@ -715,6 +722,7 @@ while not done:
 					updateWinnings(state[1],state[3],screen);
 					complete=False;
 		elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+			currNego = False;
 			game = gamePlay();
 			#put the seeds into holes
 			updateSeeds(screen, game.test.getCompState(),game.test.getPlayerState(),moveSelector,1);
@@ -725,6 +733,7 @@ while not done:
 
 		elif event.type == pygame.KEYDOWN:
 			if active:
+				currNego = False;
 				print('active');
 				text += event.unicode;
 				# pygame.draw.rect(screen,color,negoBox,2);
@@ -750,15 +759,24 @@ while not done:
 				active = True;
 					# toNegotiate(int(text));
 			elif negoButton.collidepoint(mouse_pos):
+
+				#Cover the computer screen
+				pygame.draw.rect(screen, (255,255,255), negoBox1);
+				pygame.draw.rect(screen,pygame.Color('grey'),negoBox1,2)
+
+				currNego = True;
 				result = toNegotiate(int(text));
                 # checks if mouse position is over the button
 				if(result < 0):
+					hold_text = text;
 					text ='';
 					print('Computer would release: ');
 					print (result);
 					# Render the current text.
-					if(result < 0):
-						result = 0;
+					if(result < 0 & result > -2):
+						result = 'No Deal';
+					elif(result < -1):
+						result = 'Not enough seeds';
 					font1=make_font('Helvetica',20);
 					txt_surface1 = font1.render(str(result), True, (0,0,0));
 					# Blit the text.
@@ -767,19 +785,31 @@ while not done:
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
 					negoBox.w = width;
+
 					#Cover the whole screen
 					pygame.draw.rect(screen, (255,255,255), negoBox);
 
+					
+
 				        # Blit the input_box rect.
 					pygame.draw.rect(screen, (255,0,0), negoBox, 2);
+
 					
+
 				else:
+					hold_text = text;
 					text ='';
+					#Cover the computer screen
+					pygame.draw.rect(screen, (255,255,255), negoBox1);
+					pygame.draw.rect(screen,pygame.Color('grey'),negoBox1,2)
+
 					print('Computer would release: ');
 					print(result);
 					# Render the current text.
-					if(result<0):
-						result = 0;
+					if(result < 0 & result > -2):
+						result = 'No Deal';
+					elif(result < -1):
+						result = 'Not enough seeds';
 					font1=make_font('Helvetica',20);
 					txt_surface1 = font1.render(str(result), True, (0,0,0));
 					# Blit the text.
@@ -788,6 +818,7 @@ while not done:
 				        # Resize the box if the text is too long.
 					width = max(200, txt_surface.get_width()+10);
 					negoBox.w = width;
+
 					#Cover the whole screen
 					pygame.draw.rect(screen, (255,255,255), negoBox);
 
@@ -795,8 +826,25 @@ while not done:
 					pygame.draw.rect(screen, (0,141,0), negoBox, 2);
 					#compNegotiate(status);
 					
+			elif compNegoButton.collidepoint(mouse_pos):
+				print('Prevoious winnigs were')
+				print("Human Winnings: ",game.test.human.getWinnings());
+				print("Computer Winnings: ",game.test.comp.getWinnings());
+				#Updating both winnigs
+				game.test.setPlayerWinningsAPI(result+((sum(game.test.getPlayerState()))-int(hold_text)));
+				game.test.setCompWinningsAPI(int(hold_text)+(sum(game.test.getCompState())-result));
+				print('After updating, winnigs were')
+				print("Human Winnings: ",game.test.human.getWinnings());
+				print("Computer Winnings: ",game.test.comp.getWinnings());
+				hold_text='';
+				game.test.gameOver();
+				showWinner(game.getWinner(), screen,font);
 
+			elif compNonegoButton.collidepoint(mouse_pos):
+				print('No Accepts');
+				print(currNego);
 			else:
+				currNego = False;
 				active = False;
                 # Change the current color of the input box.
 				color = color_active if active else color_inactive;

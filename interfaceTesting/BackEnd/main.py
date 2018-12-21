@@ -127,6 +127,14 @@ class Main:
 	def setPlayerWinnings(self):
 		self.human.setWinnings(self.comp.getPlayerWinnings());
 
+	#Api to update winnings for com[puter]
+	def setCompWinningsAPI(self,winn):
+		self.comp.setWinnings(winn);
+
+	#Api to set the winnings for player
+	def setPlayerWinningsAPI(self,winn):
+		self.human.setWinnings(winn);
+
 	#called to check if player can still play if holes arent empty
 	def checkPlayerGameState(self):
 		return (sum(self.human.getState()) == 0);
