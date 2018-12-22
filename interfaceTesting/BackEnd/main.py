@@ -12,8 +12,8 @@ class Main:
 	
 	def __init__(self,difLevel,compStat,playerStat):
 		self.difLevel=1;
-		self.comp = computer([4,4,4,4,4,4],compStat);
-		self.human = player([4,4,4,4,4,4],playerStat);
+		self.comp = computer([1,0,0,0,0,2],compStat);
+		self.human = player([2,0,0,0,0,1],playerStat);
 		self.alpha=-200;#for maximiser
 		self.beta=200;#for minimizer
 

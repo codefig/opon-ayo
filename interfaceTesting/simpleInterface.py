@@ -241,13 +241,13 @@ def showWinner(who,screen,font):
 	#Font for displaying text
 	font = make_font('Helvetica',40);
 	if (who=='Draw'):
-		winner = "It is a Draw";
+		winner = "It is a Draw(OMI)";
 
 	elif who=='Computer':
-		winner="Computer Wins";
+		winner="Computer Wins(OTA)";
 
 	else:
-		winner="Player Wins";
+		winner="Player Wins(OTA)";
 
 	text = font.render(winner,True, (158,142,136));
 	#place text way under second player
@@ -540,7 +540,7 @@ def toNegotiate(seeds):
 		print('Test 1 :');
 		if((state[1]+(sum(state[0]) + sum(state[2]))) <= state[3]):#check for the first condition
 			print ("Computer Accepts Shamefully since it knows it can not win again");
-			return sum(seeds[0])/2;#Computer gives half its seeds
+			return sum(state[0])/2;#Computer gives half its seeds
 		print('Test 2 :');
 		if(state[1]+seeds >= state[3]+(sum(state[0]) + sum(state[2]))):#Check for the second condition
 			print("Computer's winnigs is far greater or at least I dont loose, I take the deal");
@@ -558,15 +558,24 @@ def toNegotiate(seeds):
 				return sum(state[0])-need;
 			else:
 				return 0;
-			return True;
+			return 0;
 		print('Test 5 :');
 		if(state[3] > 24):#If the player already has more seeds, forget it
 			print('Player already has upper hand');
 			return sum(state[1])/2;
+
+		#Complementary test 
 		print('Test 6 :');
-		if((sum(state[0])+sum(state[2])) % 2 ==0 & state[1]==state[3]):
-			print('There is a possibility of a draw');
-			return -1; #There is a draw possibility
+		if(state[1]+seeds > state[3]+(sum(state[0])+sum(state[2]))):#If the user is offering too much seeds, accepts.
+			print('User is too generous, I graciously accept');
+			return sum(state[0]);
+
+		print('Test 7 :');
+		if(state[1]+seeds > state[3]):#If the amount of seeds the user is offering is making computer having more seeds, let's check if it is a good deal
+			if((sum(state[2])-seeds)+state[3] > state[1]+seeds):#If the players seeds+remainingSeedOnBoard is greater
+				return 0;
+			else:
+				return sum(state[0])/2;
 		return -1;
 
 	except Exception as e:

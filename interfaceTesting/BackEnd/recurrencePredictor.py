@@ -30,15 +30,15 @@ class compHandler(object):
 			return
 			
 
-		elif (originalBoard.test.isgameOver() == 'true') | (depth==4):
+		elif (originalBoard.test.isgameOver() == 'true') | (depth==8):
 			self.best_score= self.best_score+originalBoard.test.comp.getWinnings()-originalBoard.test.human.getWinnings();
 			holldd='player winnigs is '+str(self.best_score);
 			self.file.write(holldd+'\n');
 			holldd='Alpha beta values to pass down are '+str(originalBoard.test.getAlpha()) + ' ' + str(originalBoard.test.getBeta());
 			self.file.write(holldd+'\n');
-			if (depth==4):
+			if (depth==8):
 				self.file.write('***************************************************************\n');
-				self.file.write('Returning back to previos board since depth is now 5\n');
+				self.file.write('Returning back to previos board since depth is now 8\n');
 				self.file.write('***************************************************************\n');
 
 				# originalBoard.test.gameOver();
