@@ -30,13 +30,13 @@ class compHandler(object):
 			return
 			
 
-		elif (originalBoard.test.isgameOver() == 'true') | (depth==8):
+		elif (originalBoard.test.isgameOver() == 'true') | (depth==7):
 			self.best_score= self.best_score+originalBoard.test.comp.getWinnings()-originalBoard.test.human.getWinnings();
 			holldd='player winnigs is '+str(self.best_score);
 			self.file.write(holldd+'\n');
 			holldd='Alpha beta values to pass down are '+str(originalBoard.test.getAlpha()) + ' ' + str(originalBoard.test.getBeta());
 			self.file.write(holldd+'\n');
-			if (depth==8):
+			if (depth==7):
 				self.file.write('***************************************************************\n');
 				self.file.write('Returning back to previos board since depth is now 8\n');
 				self.file.write('***************************************************************\n');
@@ -72,7 +72,7 @@ class compHandler(object):
 
 				if (originalBoard.ai.playPos(i+1)==-1):
 					# print 'cant play hole because it is empty ', i+1;
-					nextPlay[i]=-200;
+					nextPlay[i]=-100000;
 					continue;
 				else:
 					holldd='Computer PLAYING HOLE '+str(i+1);
@@ -128,7 +128,7 @@ class compHandler(object):
 				
 
 				if (originalBoard.human.playPos(j+1) == -1):
-					# nextPlay[j]=-200;
+					nextPlay[j]=-100000;
 					
 					# print 'cant play hole because it is empty ', j+1;
 					continue;
